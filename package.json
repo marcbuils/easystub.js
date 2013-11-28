@@ -1,0 +1,26 @@
+{
+  "name": "easystub.js",
+  "version": "0.0.1",
+  "description": "EasyStub.js - a simple stubbing framework for javascript",
+  "main": "index.js",
+  "scripts": {
+    "test": "grunt test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/marcbuils/easystub.js.git"
+  },
+  "keywords": [
+    "stub",
+    "javascript",
+    "easystub",
+    "easystub.js",
+    "marcbuils",
+    "buils"
+  ],
+  "author": "SAS Marc Buils Consultant",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/marcbuils/easystub.js/issues"
+  }
+}
