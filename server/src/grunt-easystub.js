@@ -1,7 +1,7 @@
 'use strict';
 
-var portscanner = require('portscanner');
 var serverEasyStub = require('./server-easystub');
+var defaultPort = 6000;
 var exports;
 
 exports = function (options) {
@@ -17,10 +17,7 @@ exports = function (options) {
             res.end(data);
         },
         initialize: function () {
-            var port = portscanner.findAPortNotInUse(6001, 7000, 'localhost',
-                function (error, port) {
-                    serverEasyStub.listen(port);
-                });
+            serverEasyStub.listen(config.port || defaultPort);
         },
         server: function (req, res, next) {
             var stubs = options.stubs || {};

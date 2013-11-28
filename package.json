@@ -22,5 +22,6 @@
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/marcbuils/easystub.js/issues"
-  }
+  },
+  "dependencies": {}
 }

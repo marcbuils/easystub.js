@@ -1,3 +1,3 @@
 'use strict';
 
-module.exports = require('./server/src/server-easystub');
+module.exports = require('./server/src/grunt-easystub');
