@@ -1,6 +1,6 @@
 {
   "name": "easystub.js",
-  "version": "0.0.1",
+  "version": "0.1.4",
   "description": "EasyStub.js - a simple stubbing framework for javascript",
   "main": "index.js",
   "scripts": {
@@ -23,5 +23,14 @@
   "bugs": {
     "url": "https://github.com/marcbuils/easystub.js/issues"
   },
-  "dependencies": {}
+  "dependencies": {
+    "socket.io": "~0.9.16",
+    "portscanner": "~0.1.3"
+  },
+  requireDependencies: {
+    'socket.io': {
+        'path': 'node_modules/socket.io/lib/socket.io'
+        'exports': 'io'
+    }
+  }
 }

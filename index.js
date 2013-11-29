@@ -1,3 +1,6 @@
 'use strict';
 
-module.exports = require('./server/src/grunt-easystub');
+module.exports = {
+    server: require('./server/src/grunt-easystub'),
+    casper: require('./client/src/casper-interceptor')
+};

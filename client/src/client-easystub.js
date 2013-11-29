@@ -1,12 +1,14 @@
-define([
-    '/socket.io/socket.io.js'
-], function (io) {
+(function (context, factory) {
+    var name = 'easystub', io = context.io;
+    context[name] = factory(io);
+}(window, function (io) {
     "use strict";
 
     var socket = null, connection = null;
 
     // connection de socketio
-    socket = io.connect('//' + window.location.host);
+    socket = io
+        .connect('//' + window.location.host.split(':')[0] + ':__PORT__');
 
     // reception des donnees
     socket.on('service-rx', function (data) {
@@ -39,4 +41,4 @@ define([
     };
 
     return connection;
-});
+}));

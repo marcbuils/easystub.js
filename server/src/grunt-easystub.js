@@ -1,13 +1,18 @@
 'use strict';
 
 var serverEasyStub = require('./server-easystub');
-var defaultPort = 6000;
+var portscanner = require('portscanner');
+var ports = [
+    6000,
+    7000
+];
 var exports;
 
 exports = function (options) {
-    var module;
+    var _module;
 
-    module = {
+    _module = {
+        _port: null,
         _response: function (res, type, data) {
             res.setHeader('Content-type', type);
             res.setHeader('Expires', 'Mon, 26 Jul 1997 05:00:00 GMT');
@@ -17,7 +22,14 @@ exports = function (options) {
             res.end(data);
         },
         initialize: function () {
-            serverEasyStub.listen(config.port || defaultPort);
+            portscanner.findAPortNotInUse(ports[0], ports[1], 'localhost',
+                function (error, port) {
+                    _module.port = port;
+
+                    console
+                        .log("Port used for EasyStub.js: " + port.toString());
+                    serverEasyStub.listen(_module.port);
+                });
         },
         server: function (req, res, next) {
             var stubs = options.stubs || {};
@@ -25,16 +37,18 @@ exports = function (options) {
             var stub;
 
             if (req.originalUrl === "/easystub.js") {
-                module._response(res, 'text/javascript', JSON
-                    .stringify(__dirname
-                        + '/../../client/src/client-easystub.js'));
+                _module._response(res, 'text/javascript', require('fs')
+                    .readFileSync(
+                        __dirname + '/../../client/src/client-easystub.js',
+                        'utf8').replace(/__PORT__/gi, _module.port));
+                found = true;
             }
 
             if (!found) {
                 serverEasyStub.getList().forEach(
                     function (stub) {
                         if (new RegExp(stub).test(req.originalUrl)) {
-                            module._response(res, 'application/json', JSON
+                            _module._response(res, 'application/json', JSON
                                 .stringify(serverEasyStub.get(stub)));
                             found = true;
                         }
@@ -50,7 +64,7 @@ exports = function (options) {
                 for (stub in stubs) {
                     if (stubs.hasOwnProperty(stub)) {
                         if (new RegExp(stub).test(req.originalUrl)) {
-                            module._response(res, 'application/json', JSON
+                            _module._response(res, 'application/json', JSON
                                 .stringify(stubs[stub]));
                             found = true;
                         }
@@ -63,9 +77,9 @@ exports = function (options) {
             }
         }
     };
-    module.initialize();
+    _module.initialize();
 
-    return module.server;
+    return _module.server;
 };
 
-modules.exports = exports;
+module.exports = exports;
