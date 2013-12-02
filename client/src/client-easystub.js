@@ -2,25 +2,41 @@
     var name = 'easystub', io = context.io;
     context[name] = factory(io);
 }(window, function (io) {
-    "use strict";
+    'use strict';
 
-    var socket = null, connection = null;
+    var socket = null, connection = null, events = [];
 
-    // connection de socketio
+    // connection de socket.io
     socket = io
         .connect('//' + window.location.host.split(':')[0] + ':__PORT__');
 
     // reception des donnees
     socket.on('service-rx', function (data) {
-        $(connection).triggerHandler(data.type, [
-            data.data
-        ]);
+        var i;
+
+        if (events[data.type]) {
+            for (i = 0; i < events[data.type].length; i++) {
+                events[data.type][i](data.data);
+            }
+        }
     }).on('change-service-rx', function (data) {
-        $(connection).triggerHandler('change-' + data.type, [
-            data.data
-        ]);
+        var i, evtName = 'change-' + data.type;
+
+        if (events[data.type]) {
+            for (i = 0; i < events[evtName].length; i++) {
+                events[evtName][i](data.data);
+            }
+        }
     }).on('removed-service-rx', function (type) {
-        $(connection).triggerHandler('removed-' + type);
+        var i, evtName = 'remove-' + type;
+
+        if (events[data.type]) {
+            for (i = 0; i < events[evtName].length; i++) {
+                events[evtName][i]();
+            }
+        }
+    }).on('error', function (err) {
+        throw 'EasyStub.js error';
     });
 
     connection = {
@@ -37,6 +53,13 @@
             socket.emit('remove-service-rx', type);
 
             return connection;
+        },
+        on: function (event, callback) {
+            if (!events[event]) {
+                events[event] = [];
+            }
+
+            events[event].push(callback);
         }
     };
 

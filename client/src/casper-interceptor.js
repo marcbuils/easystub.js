@@ -1,21 +1,22 @@
 var casper = {
-    /*
-    Intercepte un stub pour forcer le contenu
-    @param type    nom du service
-    @param data    Liste des données à modifier
-    @param httpStatus    (optionnel) Le status http. Par défaut 200.
-
-    Attention : il faut utiliser un `casper.then` après la fonction car elle est asynchrone.
-
-    Exemple d'utilisation
-    casper.then(function () {
-      this.startInterceptor('/account/client/1/session', {}, 204);
-    });
-
-    casper.then(function () {
-      // Du code ici
-    });
-    */
+    //    Intercepte un stub pour forcer le contenu
+    //    @param type    nom du service
+    //    @param data    Liste des données à modifier
+    //    @param httpStatus    (optionnel) Le status http. Par défaut 200.
+    //
+    //    > _Attention : il faut utiliser un `casper.then` après la fonction car elle est asynchrone._
+    //
+    //    Exemple d'utilisation
+    //    ```javascript
+    //    casper.then(function () {
+    //      this.startInterceptor('/account/client/1/session', {}, 204);
+    //    });
+    //
+    //    casper.then(function () {
+    //      // Du code ici
+    //    });
+    //    ```
+    //
     startInterceptor: function (type, data, httpStatus) {
         var status;
         status = (httpStatus === undefined ? 200 : httpStatus);

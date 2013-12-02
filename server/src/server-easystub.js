@@ -3,13 +3,16 @@
 var self = null;
 
 self = {
+    io: null,
     _services: {},
     _sockets: [],
 
     listen: function (server) {
-        var io = require('socket.io').listen(server);
+        self.io = require('socket.io').listen(server, {
+            'log level': 1
+        });
 
-        io.sockets.on('connection', function (socket) {
+        self.io.sockets.on('connection', function (socket) {
             self._sockets.push(socket);
 
             socket.on('service-rx', function (data) {

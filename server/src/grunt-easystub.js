@@ -3,8 +3,8 @@
 var serverEasyStub = require('./server-easystub');
 var portscanner = require('portscanner');
 var ports = [
-    6000,
-    7000
+    7001,
+    8000
 ];
 var exports;
 
@@ -44,12 +44,25 @@ exports = function (options) {
                 found = true;
             }
 
+            if (req.originalUrl === "/socket.io/socket.io.js") {
+                _module
+                    ._response(
+                        res,
+                        'text/javascript',
+                        require('fs')
+                            .readFileSync(
+                                __dirname
+                                    + '/../../node_modules/socket.io/node_modules/socket.io-client/dist/socket.io.min.js',
+                                'utf8').replace(/__PORT__/gi, _module.port));
+                found = true;
+            }
+
             if (!found) {
                 serverEasyStub.getList().forEach(
                     function (stub) {
                         if (new RegExp(stub).test(req.originalUrl)) {
                             _module._response(res, 'application/json', JSON
-                                .stringify(serverEasyStub.get(stub)));
+                                .stringify(serverEasyStub.get(stub).data));
                             found = true;
                         }
                     });
