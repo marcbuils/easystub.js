@@ -36,22 +36,21 @@ var casper = {
         return this.wait(500);
     },
 
-    /*
-    Supprime l'interception d'un stub
-    @param type    nom du service
-
-    Attention : il faut utiliser un `casper.then` après la fonction car elle est asynchrone.
-
-    Exemple d'utilisation
-
-    casper.then(function () {
-      this.stopInterceptor('/account/client/1/session');
-    });
-
-    casper.then(function () {
-      // Du code ici
-    });
-    */
+    //    Supprime l'interception d'un stub
+    //    @param type    nom du service
+    //
+    //    Attention : il faut utiliser un `casper.then` après la fonction car elle est asynchrone.
+    //
+    //    Exemple d'utilisation
+    //
+    //    casper.then(function () {
+    //      this.stopInterceptor('/account/client/1/session');
+    //    });
+    //
+    //    casper.then(function () {
+    //      // Du code ici
+    //    });
+    //    
     stopInterceptor: function (type) {
         this.evaluate((function (type) {
             var connection;
