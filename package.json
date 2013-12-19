@@ -1,6 +1,6 @@
 {
   "name": "easystub.js",
-  "version": "0.3.0",
+  "version": "0.3.4",
   "description": "EasyStub.js - a simple stubbing framework for javascript",
   "main": "index.js",
   "repository": {
