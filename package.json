@@ -1,11 +1,8 @@
 {
   "name": "easystub.js",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "EasyStub.js - a simple stubbing framework for javascript",
   "main": "index.js",
-  "scripts": {
-    "test": "grunt test"
-  },
   "repository": {
     "type": "git",
     "url": "git://github.com/marcbuils/easystub.js.git"

@@ -2,5 +2,6 @@
 
 module.exports = {
     connect: require('./server/src/grunt-easystub'),
-    casper: require('./client/src/casper-interceptor')
+    casper: require('./client/src/casper-interceptor'),
+    server: require('./client/src/server-interceptor')
 };
