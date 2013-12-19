@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="Easystub.js : EasyStub.js - a simple stubbing framework for javascript" />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Easystub.js</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/marcbuils/easystub.js">View on GitHub</a>
+
+          <h1 id="project_title">Easystub.js</h1>
+          <h2 id="project_tagline">EasyStub.js - a simple stubbing framework for javascript</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/marcbuils/easystub.js/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/marcbuils/easystub.js/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h1>
+<a name="easystubjs" class="anchor" href="#easystubjs"><span class="octicon octicon-link"></span></a>easystub.js</h1>
+
+<blockquote>
+<p><em>EasyStub.js - a simple stubbing framework for javascript</em> 
+(EasyStub.js stubs only JSON services)</p>
+</blockquote>
+
+<hr><h2>
+<a name="requirements" class="anchor" href="#requirements"><span class="octicon octicon-link"></span></a>Requirements</h2>
+
+<ul>
+<li>
+<a href="https://github.com/gruntjs/grunt-contrib-connect">grunt-contrib-connect</a> <code>npm install --save-dev grunt-cli</code>
+</li>
+</ul><h2>
+<a name="optionals" class="anchor" href="#optionals"><span class="octicon octicon-link"></span></a>Optionals</h2>
+
+<ul>
+<li>
+<a href="http://docs.casperjs.org/en/latest/installation.html#installing-from-git">CasperJS</a> <code>npm install -g capserjs</code>
+</li>
+</ul><hr><h2>
+<a name="composition" class="anchor" href="#composition"><span class="octicon octicon-link"></span></a>Composition</h2>
+
+<ul>
+<li>module for grunt-contrib-connect</li>
+<li>CasperJS API to modify stubs from a casper test</li>
+<li>Javascript API to modify stubs from an HTML page</li>
+<li>NodeJS API to set a custom stub server</li>
+</ul><h4>
+<a name="prerequisite" class="anchor" href="#prerequisite"><span class="octicon octicon-link"></span></a>Prerequisite</h4>
+
+<blockquote>
+<p><em>To execute at least one time</em></p>
+</blockquote>
+
+<div class="highlight highlight-bash"><pre>npm install easystub.js --savedev
+</pre></div>
+
+<h2>
+<a name="module-for-grunt-contrib-connect" class="anchor" href="#module-for-grunt-contrib-connect"><span class="octicon octicon-link"></span></a>module for grunt-contrib-connect</h2>
+
+<p>This module create the stub server.</p>
+
+<h3>
+<a name="usage" class="anchor" href="#usage"><span class="octicon octicon-link"></span></a>Usage</h3>
+
+<blockquote>
+<p><em>Add this lines in your Gruntfiles.js</em></p>
+</blockquote>
+
+<p>Example:  </p>
+
+<div class="highlight highlight-javascript"><pre><span class="nx">grunt</span><span class="p">.</span><span class="nx">initConfig</span><span class="p">({</span>
+    <span class="nx">connect</span><span class="o">:</span> <span class="p">{</span>
+        <span class="nx">dev</span><span class="o">:</span> <span class="p">{</span>
+            <span class="nx">options</span><span class="o">:</span> <span class="p">{</span>
+                <span class="nx">port</span><span class="o">:</span> <span class="mi">8000</span><span class="p">,</span>
+                <span class="nx">middleware</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">connect</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="k">return</span> <span class="p">[</span>
+                        <span class="nx">connect</span><span class="p">.</span><span class="kr">static</span><span class="p">(</span><span class="nx">require</span><span class="p">(</span><span class="s1">'path'</span><span class="p">).</span><span class="nx">resolve</span><span class="p">(</span><span class="s1">'app/'</span><span class="p">)),</span>
+
+                        <span class="cm">/* The following lines add Easystub server */</span> 
+                        <span class="nx">require</span><span class="p">(</span><span class="s1">'easystub.js'</span><span class="p">).</span><span class="nx">connect</span><span class="p">({</span>
+                            <span class="nx">stubsFile</span><span class="o">:</span> <span class="s1">'conf/stubs.json'</span>
+                        <span class="p">})</span>
+                        <span class="cm">/* End */</span>
+                    <span class="p">];</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">});</span>
+</pre></div>
+
+<h3>
+<a name="options" class="anchor" href="#options"><span class="octicon octicon-link"></span></a>Options</h3>
+
+<ul>
+<li>stubsFile: path to the configuration file</li>
+</ul><h3>
+<a name="configuration-file" class="anchor" href="#configuration-file"><span class="octicon octicon-link"></span></a>Configuration file</h3>
+
+<p>The configuration file is a JSON file composed of regular expressions matching URLs and 
+key data to be returned in the HTTP request value.</p>
+
+<p>Example:  </p>
+
+<div class="highlight highlight-json"><pre><span class="p">{</span>
+    <span class="nt">"^/services/my-service$"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">"my_custom_data_1"</span><span class="p">:</span> <span class="mi">123</span><span class="p">,</span>
+        <span class="nt">"my_custom_data_2"</span><span class="p">:</span> <span class="mi">456</span>
+    <span class="p">},</span>
+    <span class="nt">"^/services/my-second-service$"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">"my_custom_data_1"</span><span class="p">:</span> <span class="mi">789</span><span class="p">,</span>
+        <span class="nt">"my_custom_data_2"</span><span class="p">:</span> <span class="mi">963</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+
+<h2>
+<a name="casperjs-api" class="anchor" href="#casperjs-api"><span class="octicon octicon-link"></span></a>CasperJS API</h2>
+
+<p>With Easystub.js API for CasperJS, you can control the data returned by the stub, from your CasperJS tests.</p>
+
+<h3>
+<a name="functions" class="anchor" href="#functions"><span class="octicon octicon-link"></span></a>Functions</h3>
+
+<ul>
+<li>casper.startInterceptor(urlExp, data): Start or change a stub</li>
+<li>casper.stopInterceptor(urlExp): Stop a stub</li>
+</ul><h3>
+<a name="usage-1" class="anchor" href="#usage-1"><span class="octicon octicon-link"></span></a>Usage</h3>
+
+<blockquote>
+<p><em>Add this lines in your CasperJS test files</em></p>
+</blockquote>
+
+<p>Example:  </p>
+
+<div class="highlight highlight-javascript"><pre><span class="s1">'use strict'</span><span class="p">;</span>
+
+<span class="c1">// Add startInterceptor and stopInterceptor to casper</span>
+<span class="nx">require</span><span class="p">(</span><span class="s1">'../../node_modules/easystub.js/client/src/casper-interceptor.js'</span><span class="p">)(</span>
+    <span class="nx">casper</span><span class="p">);</span>
+
+<span class="nx">casper</span><span class="p">.</span><span class="nx">test</span>
+    <span class="p">.</span><span class="nx">begin</span><span class="p">(</span>
+        <span class="s1">'Your casper test'</span><span class="p">,</span>
+        <span class="kd">function</span> <span class="p">(</span><span class="nx">test</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">casper</span>
+                <span class="p">.</span><span class="nx">start</span><span class="p">(</span><span class="s1">'http://localhost:8000/index.html'</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+                    <span class="c1">// Load a page before use Easystub.js API</span>
+                    <span class="k">this</span><span class="p">.</span><span class="nx">waitForSelector</span><span class="p">(</span><span class="s1">'body'</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{});</span>
+                <span class="p">})</span>
+                <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+                    <span class="c1">// Change values of default stubs</span>
+                    <span class="k">this</span><span class="p">.</span><span class="nx">startInterceptor</span><span class="p">(</span><span class="s1">'^/services/my-service$'</span><span class="p">,</span> <span class="p">{</span>
+                        <span class="s2">"my_custom_data_1"</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+                        <span class="s2">"my_custom_data_2"</span><span class="o">:</span> <span class="mi">1</span>
+                    <span class="p">});</span>
+
+                    <span class="c1">// Or create new stubs</span>
+                    <span class="k">this</span><span class="p">.</span><span class="nx">startInterceptor</span><span class="p">(</span><span class="s1">'^/services/my-new-service$'</span><span class="p">,</span> <span class="p">{</span>
+                        <span class="s2">"name"</span><span class="o">:</span> <span class="s2">"Hello world"</span>
+                    <span class="p">});</span>
+                <span class="p">})</span>
+                <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+                    <span class="c1">// your casper tests here</span>
+                <span class="p">})</span>
+                <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+                    <span class="c1">// change values of started stub</span>
+                    <span class="k">this</span><span class="p">.</span><span class="nx">startInterceptor</span><span class="p">(</span><span class="s1">'^/services/my-service$'</span><span class="p">,</span> <span class="p">{</span>
+                        <span class="s2">"my_custom_data_1"</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
+                        <span class="s2">"my_custom_data_2"</span><span class="o">:</span> <span class="mi">2</span>
+                    <span class="p">});</span>          
+                <span class="p">})</span>
+                <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+                    <span class="c1">// your casper tests here</span>
+                <span class="p">})</span>
+                <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+                    <span class="c1">// stop stubs</span>
+                    <span class="k">this</span><span class="p">.</span><span class="nx">stopInterceptor</span><span class="p">(</span><span class="s1">'^/services/my-service$'</span><span class="p">);</span>
+                    <span class="k">this</span><span class="p">.</span><span class="nx">stopInterceptor</span><span class="p">(</span><span class="s1">'^/services/my-new-service$'</span><span class="p">);</span>
+                <span class="p">})</span>
+                <span class="p">.</span><span class="nx">run</span><span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+                    <span class="nx">test</span><span class="p">.</span><span class="nx">done</span><span class="p">();</span>
+                <span class="p">});</span>
+        <span class="p">});</span>
+</pre></div>
+
+<h2>
+<a name="javascript-api" class="anchor" href="#javascript-api"><span class="octicon octicon-link"></span></a>Javascript API</h2>
+
+<p>With Easystub.js API for Javascript, you can control the data returned by the stub, from your HTML IHM.</p>
+
+<h4>
+<a name="prerequisite-1" class="anchor" href="#prerequisite-1"><span class="octicon octicon-link"></span></a>Prerequisite</h4>
+
+<blockquote>
+<p><em>Add this lines in your HTML file</em></p>
+</blockquote>
+
+<div class="highlight highlight-html"><pre><span class="c">&lt;!-- load socket.io api --&gt;</span>
+<span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"/socket.io/socket.io.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+
+<span class="c">&lt;!-- load Easystub.js api --&gt;</span>
+<span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"/easystub.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+</pre></div>
+
+<h3>
+<a name="functions-1" class="anchor" href="#functions-1"><span class="octicon octicon-link"></span></a>Functions</h3>
+
+<ul>
+<li>easystub.send(urlExp, data): Start or change a stub</li>
+<li>easystub.remove(urlExp): Stop a stub</li>
+</ul><h3>
+<a name="usage-2" class="anchor" href="#usage-2"><span class="octicon octicon-link"></span></a>Usage</h3>
+
+<blockquote>
+<p><em>Use it in HTML or a Javascript file</em></p>
+</blockquote>
+
+<p>Example:  </p>
+
+<div class="highlight highlight-html"><pre><span class="cp">&lt;!DOCTYPE html&gt;</span>
+<span class="nt">&lt;html&gt;</span>
+    <span class="nt">&lt;head&gt;</span>
+        <span class="nt">&lt;meta</span> <span class="na">charset=</span><span class="s">"utf-8"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;title&gt;</span>Easystub.js test<span class="nt">&lt;/title&gt;</span>
+
+        <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"/socket.io/socket.io.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+        <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"/easystub.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+
+        <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"//code.jquery.com/jquery-1.10.2.min.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+    <span class="nt">&lt;/head&gt;</span>
+    <span class="nt">&lt;body&gt;</span>
+        <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"button"</span> <span class="na">data-action=</span><span class="s">"change"</span> <span class="na">value=</span><span class="s">"change"</span><span class="nt">/&gt;</span>
+        <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"button"</span> <span class="na">data-action=</span><span class="s">"stop"</span> <span class="na">value=</span><span class="s">"stop"</span><span class="nt">/&gt;</span>
+
+        <span class="nt">&lt;script&gt;</span>
+            <span class="nx">$</span><span class="p">(</span><span class="s1">'[data-action="change"]'</span><span class="p">).</span><span class="nx">click</span><span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+                <span class="nx">easystub</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="s1">'^/services/my-service$'</span><span class="p">,</span> <span class="p">{</span>
+                    <span class="s2">"my_custom_data_1"</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+                    <span class="s2">"my_custom_data_2"</span><span class="o">:</span> <span class="mi">1</span>
+                <span class="p">});</span>
+            <span class="p">});</span>
+
+            <span class="nx">$</span><span class="p">(</span><span class="s1">'[data-action="stop"]'</span><span class="p">).</span><span class="nx">click</span><span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+                <span class="nx">easystub</span><span class="p">.</span><span class="nx">remove</span><span class="p">(</span><span class="s1">'^/services/my-service$'</span><span class="p">);</span>
+            <span class="p">});</span>
+        <span class="nt">&lt;/script&gt;</span>
+    <span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</pre></div>
+
+<h2>
+<a name="nodejs-api" class="anchor" href="#nodejs-api"><span class="octicon octicon-link"></span></a>NodeJS API</h2>
+
+<p>With Easystub.js API for NodeJS, you can create and manage an Easystub.js server from NodeJS.</p>
+
+<blockquote>
+<p><em>Warning: Client files "/easystub.js" and "/socket.io/socket.io.js" are not share with this API</em>
+<em>Warning: The default stub don't work with this API</em>
+<em>Warning: The Casper API don't work with this API</em></p>
+</blockquote>
+
+<h3>
+<a name="functions-2" class="anchor" href="#functions-2"><span class="octicon octicon-link"></span></a>Functions</h3>
+
+<ul>
+<li>listen(port): Start the easystub.js server (websocket)</li>
+<li>has(urlExp): Return if a stub is registered or not</li>
+<li>get(urlExp): Return the data register for the gived regulary expression</li>
+<li>getList(): Return all register stubs</li>
+</ul><h3>
+<a name="usage-3" class="anchor" href="#usage-3"><span class="octicon octicon-link"></span></a>Usage</h3>
+
+<p>Example:  </p>
+
+<div class="highlight highlight-javascript"><pre><span class="kd">var</span> <span class="nx">serverEasyStub</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'easystub.js'</span><span class="p">).</span><span class="nx">server</span><span class="p">;</span>
+<span class="kd">var</span> <span class="nx">express</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'express'</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">app</span> <span class="o">=</span> <span class="nx">express</span><span class="p">();</span>
+
+<span class="nx">app</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">'/my-service'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">){</span>
+  <span class="kd">var</span> <span class="nx">stub</span><span class="p">;</span>
+
+  <span class="k">if</span> <span class="p">(</span><span class="nx">serverEasyStub</span><span class="p">.</span><span class="nx">has</span><span class="p">(</span><span class="s1">'/my-service'</span><span class="p">))</span> <span class="p">{</span>
+    <span class="nx">stub</span> <span class="o">=</span> <span class="nx">serverEasyStub</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">'/my-service'</span><span class="p">);</span>
+    <span class="nx">res</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="nx">stub</span><span class="p">.</span><span class="nx">data</span><span class="p">);</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="nx">res</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="s1">'hello world'</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">});</span>
+
+<span class="nx">app</span><span class="p">.</span><span class="nx">listen</span><span class="p">(</span><span class="mi">3000</span><span class="p">);</span>
+<span class="nx">serverEasyStub</span><span class="p">.</span><span class="nx">listen</span><span class="p">(</span><span class="mi">3001</span><span class="p">);</span>
+</pre></div>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Easystub.js maintained by <a href="https://github.com/marcbuils">marcbuils</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+              <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-15699626-20");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
+
+  </body>
+</html>
