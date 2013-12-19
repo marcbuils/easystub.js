@@ -8,7 +8,9 @@ self = {
     _sockets: [],
 
     listen: function (server) {
-        self.io = require('socket.io').listen(server);
+        self.io = require('socket.io').listen(server, {
+            'log level': 1
+        });
 
         self.io.sockets.on('connection', function (socket) {
             self._sockets.push(socket);
