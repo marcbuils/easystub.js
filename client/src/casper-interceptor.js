@@ -21,12 +21,43 @@ var casper = {
         var status;
         status = (httpStatus === undefined ? 200 : httpStatus);
         this.evaluate(function (type, data, status) {
-            var connection;
-            connection = "/connection.js";
-            return require([
-                connection
-            ], function (connection) {
-                return connection.send(type, data, status);
+            var loadModule;
+            var root = window;
+
+            loadModule = {
+                loadScript: function (url, callback) {
+                    var script = document.createElement("script");
+
+                    script.type = "text/javascript";
+                    script.onload = callback;
+
+                    script.src = url;
+                    document.getElementsByTagName("head")[0]
+                        .appendChild(script);
+                },
+
+                loadSocketIO: function (callback) {
+                    loadModule.loadScript('/socket.io/socket.io.js', callback);
+                },
+                loadEasystub: function (callback) {
+                    loadModule.loadScript('/easystub.js', callback);
+                },
+
+                loadlibs: function (callback) {
+                    if (!root.io) {
+                        loadModule.loadSocketIO(function () {
+                            loadModule.loadEasystub(callback);
+                        });
+                    } else if (!root.easystub) {
+                        loadModule.loadEasystub(callback);
+                    } else {
+                        callback();
+                    }
+                }
+            };
+
+            loadModule.loadlibs(function () {
+                root.easystub.send(type, data, status);
             });
         }, {
             type: type,
@@ -52,15 +83,46 @@ var casper = {
     //    });
     //    
     stopInterceptor: function (type) {
-        this.evaluate((function (type) {
-            var connection;
-            connection = "/connection.js";
-            return require([
-                connection
-            ], function (connection) {
-                return connection.remove(type);
+        this.evaluate(function (type) {
+            var loadModule;
+            var root = window;
+
+            loadModule = {
+                loadScript: function (url, callback) {
+                    var script = document.createElement("script");
+
+                    script.type = "text/javascript";
+                    script.onload = callback;
+
+                    script.src = url;
+                    document.getElementsByTagName("head")[0]
+                        .appendChild(script);
+                },
+
+                loadSocketIO: function (callback) {
+                    loadModule.loadScript('/socket.io/socket.io.js', callback);
+                },
+                loadEasystub: function (callback) {
+                    loadModule.loadScript('/easystub.js', callback);
+                },
+
+                loadlibs: function (callback) {
+                    if (!root.io) {
+                        loadModule.loadSocketIO(function () {
+                            loadModule.loadEasystub(callback);
+                        });
+                    } else if (!root.easystub) {
+                        loadModule.loadEasystub(callback);
+                    } else {
+                        callback();
+                    }
+                }
+            };
+
+            loadModule.loadlibs(function () {
+                root.easystub.remove(type);
             });
-        }), {
+        }, {
             type: type
         });
         return this.wait(500);
