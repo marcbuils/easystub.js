@@ -236,7 +236,7 @@ With Easystub.js API for NodeJS, you can create and manage an Easystub.js server
 - getList(): Return all register stubs
 
 
-### Usage ###
+### Usage ###  
 
 Example:  
 '''javascript
