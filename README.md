@@ -44,7 +44,7 @@ This module create the stub server.
 > _Add this lines in your Gruntfiles.js_
 
 Example:  
-'''javascript
+```javascript
 grunt.initConfig({
     connect: {
         dev: {
@@ -65,7 +65,7 @@ grunt.initConfig({
         }
     }
 });
-'''
+```
 
 ### Options ###
 
@@ -77,7 +77,7 @@ The configuration file is a JSON file composed of regular expressions matching U
 key data to be returned in the HTTP request value.
 
 Example:  
-'''json
+```json
 {
     "^/services/my-service$": {
         "my_custom_data_1": 123,
@@ -88,7 +88,7 @@ Example:
         "my_custom_data_2": 963
     }
 }
-''' 
+``` 
 
 
 ## CasperJS API ##
@@ -105,7 +105,7 @@ With Easystub.js API for CasperJS, you can control the data returned by the stub
 > _Add this lines in your CasperJS test files_
 
 Example:  
-'''javascript
+```javascript
 'use strict';
 
 // Add startInterceptor and stopInterceptor to casper
@@ -155,7 +155,7 @@ casper.test
                     test.done();
                 });
         });
-'''
+```
 
 
 ## Javascript API ##
@@ -187,7 +187,7 @@ With Easystub.js API for Javascript, you can control the data returned by the st
 > _Use it in HTML or a Javascript file_
 
 Example:  
-'''html
+```html
 <!DOCTYPE html>
 <html>
 	<head>
@@ -217,7 +217,7 @@ Example:
 		</script>
 	</body>
 </html>
-'''
+```
 
 
 ## NodeJS API ##
@@ -236,10 +236,10 @@ With Easystub.js API for NodeJS, you can create and manage an Easystub.js server
 - getList(): Return all register stubs
 
 
-### Usage ###  
+### Usage ###
 
 Example:  
-'''javascript
+```javascript
 var serverEasyStub = require('easystub.js').server;
 var express = require('express');
 var app = express();
@@ -257,4 +257,4 @@ app.get('/my-service', function(req, res){
 
 app.listen(3000);
 serverEasyStub.listen(3001);
-'''
+```
