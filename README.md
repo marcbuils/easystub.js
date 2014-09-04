@@ -31,7 +31,7 @@
 > _To execute at least one time_
 
 ```bash
-npm install easystub.js --savedev
+npm install easystub.js --save-dev
 ```
 
 
