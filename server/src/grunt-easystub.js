@@ -34,6 +34,7 @@ exports = function (options) {
         server: function (req, res, next) {
             var stubs = options.stubs || {};
             var found = false;
+            var data;
             var stub;
 
             if (req.originalUrl === "/easystub.js") {
@@ -54,6 +55,48 @@ exports = function (options) {
                                 __dirname
                                     + '/../../node_modules/socket.io/node_modules/socket.io-client/dist/socket.io.min.js',
                                 'utf8').replace(/__PORT__/gi, _module.port));
+                found = true;
+            }
+
+            if (req.originalUrl === "/easystub/set") {
+                data = '';
+                req.on('data', function(_data) {
+                    data += _data;
+                });
+                req.on('end', function() {
+                    var parsedData;
+
+                    try {
+                        parsedData = JSON.parse(data);
+                        serverEasyStub.set(parsedData);
+
+                        _module._response(res, 'text/json', data, 'utf8');
+                    } catch (e) {
+                        _module._response(res, 'text/json', JSON.stringify({ error: e.toString(), data: data }), 'utf8');
+                    }
+                });
+
+                found = true;
+            }
+
+            if (req.originalUrl === "/easystub/remove") {
+                data = '';
+                req.on('data', function(_data) {
+                    data += _data;
+                });
+                req.on('end', function() {
+                    var parsedData;
+
+                    try {
+                        parsedData = JSON.parse(data);
+                        serverEasyStub.remove(parsedData.type);
+
+                        _module._response(res, 'text/json', data, 'utf8');
+                    } catch (e) {
+                        _module._response(res, 'text/json', JSON.stringify({ error: e.toString(), data: data }), 'utf8');
+                    }
+                });
+
                 found = true;
             }
 
